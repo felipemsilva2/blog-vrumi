@@ -1,15 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
-import { ViewState } from './types';
 import { HubPage } from './components/HubPage';
-import { ArticlePage } from './components/ArticlePage';
 import { VrumiAssistant } from './components/VrumiAssistant';
-import { ARTICLES_CONTENT } from './constants';
-import { Menu, X, ArrowRight, Search } from 'lucide-react';
+import { WaitlistModal } from './components/WaitlistModal';
+import { Menu, X, ArrowRight } from 'lucide-react';
 
 export default function App() {
-  const [viewState, setViewState] = useState<ViewState>('hub');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,25 +18,21 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [viewState]);
+  const scrollToSection = (id: string) => {
+    setIsMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 100; // Ajuste para o header fixo
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
 
-  const getCurrentArticle = () => {
-     return ARTICLES_CONTENT.find(a => a.id === viewState);
-  };
-
-  const renderContent = () => {
-    if (viewState === 'hub') {
-       return <HubPage setViewState={setViewState} />;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
-    
-    const article = getCurrentArticle();
-    if (article) {
-       return <ArticlePage article={article} onBack={() => setViewState('hub')} onNavigate={(id) => setViewState(id as ViewState)} />;
-    }
-
-    return <HubPage setViewState={setViewState} />;
   };
 
   return (
@@ -50,32 +45,31 @@ export default function App() {
           ${scrolled ? 'w-[90%] md:w-[600px] bg-white/80 backdrop-blur-xl border border-white/20 shadow-apple' : 'w-[95%] bg-transparent border-transparent'}
           rounded-full px-6 py-3 flex items-center justify-between
         `}>
-          {/* Logo - Replaced text/icon with Image */}
+          {/* Logo */}
           <div 
             className="cursor-pointer block group" 
-            onClick={() => setViewState('hub')}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <img 
-              src="https://placehold.co/120x40/transparent/10B981?text=VRUMI" 
-              alt="Vrumi Logo" 
-              className="h-8 w-auto object-contain group-hover:opacity-80 transition-opacity"
-            />
+            <div className="flex items-center gap-2">
+                <span className="font-black text-lg tracking-tight text-gray-900 group-hover:text-vrumi transition-colors">VRUMI</span>
+                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Connect</span>
+            </div>
           </div>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
-            <button onClick={() => setViewState('hub')} className="hover:text-black transition-colors">Hub</button>
-            <a href="#" className="hover:text-black transition-colors">Legislação</a>
-            <a href="#" className="hover:text-black transition-colors">Guias</a>
+            <button onClick={() => scrollToSection('students')} className="hover:text-black transition-colors">Alunos</button>
+            <button onClick={() => scrollToSection('instructors')} className="hover:text-black transition-colors">Instrutores</button>
+            <button onClick={() => scrollToSection('safety')} className="hover:text-black transition-colors">Segurança</button>
           </nav>
 
           {/* Action / Menu */}
           <div className="flex items-center gap-3">
-            <button className="hidden md:flex text-gray-500 hover:text-black transition-colors p-2">
-               <Search size={18} />
-            </button>
-            <button className="hidden md:flex bg-vrumi text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-emerald-600 transition-all shadow-sm hover:shadow-md items-center gap-1">
-              App
+            <button 
+              onClick={() => setIsWaitlistOpen(true)}
+              className="hidden md:flex bg-black text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-gray-800 transition-all shadow-sm hover:shadow-md items-center gap-1"
+            >
+              Lista de Espera <ArrowRight size={12} />
             </button>
             
             {/* Mobile Menu Toggle */}
@@ -92,12 +86,15 @@ export default function App() {
         {isMenuOpen && (
           <div className="absolute top-24 left-1/2 -translate-x-1/2 w-[90%] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 pointer-events-auto animate-scale-in border border-gray-100">
              <nav className="flex flex-col gap-4 text-center">
-                <button onClick={() => {setViewState('hub'); setIsMenuOpen(false)}} className="text-lg font-medium">Home</button>
-                <a href="#" className="text-lg font-medium text-gray-500">Cursos</a>
-                <a href="#" className="text-lg font-medium text-gray-500">Blog</a>
+                <button onClick={() => scrollToSection('students')} className="text-lg font-medium text-gray-500">Alunos</button>
+                <button onClick={() => scrollToSection('instructors')} className="text-lg font-medium text-gray-500">Instrutores</button>
+                <button onClick={() => scrollToSection('safety')} className="text-lg font-medium text-gray-500">Segurança</button>
                 <hr className="border-gray-200" />
-                <button className="bg-vrumi text-white py-3 rounded-xl font-bold w-full">
-                  Baixar App
+                <button 
+                  onClick={() => { setIsWaitlistOpen(true); setIsMenuOpen(false); }}
+                  className="bg-black text-white py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2"
+                >
+                  Entrar na Lista de Espera
                 </button>
              </nav>
           </div>
@@ -106,7 +103,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-grow pt-24">
-        {renderContent()}
+        <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />
       </main>
 
       {/* Modern Footer */}
@@ -114,52 +111,58 @@ export default function App() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
-              {/* Footer Logo - Kept as text for clean typography, or could be replaced similarly */}
-              <span className="text-black font-bold text-xl block mb-4">Vrumi</span>
+              <span className="text-black font-bold text-xl block mb-4">Vrumi Connect</span>
               <p className="text-xs leading-relaxed max-w-xs">
-                O Hub definitivo para quem quer entender o futuro da habilitação no Brasil.
-                Dados, análises e tecnologia.
+                O Marketplace que conecta alunos e instrutores de trânsito. Segurança, tecnologia e liberdade para dirigir.
               </p>
+              <button 
+                onClick={() => setIsWaitlistOpen(true)}
+                className="mt-6 text-vrumi font-bold text-sm hover:underline flex items-center gap-1"
+              >
+                Garantir meu acesso antecipado <ArrowRight size={14} />
+              </button>
             </div>
             <div>
-              <h4 className="text-black font-semibold text-sm mb-4">Explorar</h4>
+              <h4 className="text-black font-semibold text-sm mb-4">Produto</h4>
               <ul className="space-y-3 text-xs">
-                <li><a href="#" className="hover:underline">Legislação Comentada</a></li>
-                <li><a href="#" className="hover:underline">Calculadora de Custo</a></li>
-                <li><a href="#" className="hover:underline">Mapa da CNH Digital</a></li>
-                <li><a href="#" className="hover:text-vrumi">Central de Ajuda</a></li>
+                <li><button onClick={() => scrollToSection('students')} className="hover:underline">Para Alunos</button></li>
+                <li><button onClick={() => scrollToSection('instructors')} className="hover:underline">Para Instrutores</button></li>
+                <li><button onClick={() => scrollToSection('safety')} className="hover:underline">Segurança</button></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-black font-semibold text-sm mb-4">Editorial</h4>
+              <h4 className="text-black font-semibold text-sm mb-4">Suporte</h4>
               <ul className="space-y-3 text-xs">
-                <li><a href="#" className="hover:underline">Equipe de Redação</a></li>
-                <li><a href="#" className="hover:underline">Política de Verificação</a></li>
-                <li><a href="#" className="hover:underline">Envie uma pauta</a></li>
+                <li><a href="#" className="hover:underline">Central de Ajuda</a></li>
+                <li><a href="#" className="hover:underline">Fale Conosco</a></li>
+                <li><a href="#" className="hover:underline">Termos de Uso</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-black font-semibold text-sm mb-4">Social</h4>
               <ul className="space-y-3 text-xs">
                 <li><a href="#" className="hover:underline">Instagram</a></li>
-                <li><a href="#" className="hover:underline">Twitter / X</a></li>
                 <li><a href="#" className="hover:underline">LinkedIn</a></li>
+                <li><a href="#" className="hover:underline">TikTok</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-200 pt-8 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
              <div>
-                Brasil | Política de Privacidade | Termos de Uso
+                © 2025 Vrumi Tecnologia Ltda. Todos os direitos reservados.
              </div>
-             <div className="text-gray-400">
-                &copy; 2025 Vrumi Knowledge Hub.
+             <div className="flex items-center gap-4 opacity-30 grayscale">
+                <span className="font-bold">Em breve no:</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_logo_white.svg" className="w-4 h-4 invert" alt="Apple" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" className="w-4 h-4" alt="Android" />
              </div>
           </div>
         </div>
       </footer>
 
-      {/* AI Assistant */}
-      <VrumiAssistant />
+      {/* UI Elements */}
+      <VrumiAssistant onWaitlistClick={() => setIsWaitlistOpen(true)} />
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
     </div>
   );
 }

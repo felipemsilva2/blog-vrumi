@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vrumi - Hub de CNH Digital</title>
-    <meta name="description" content="Guia completo sobre curso teórico online, legislação de trânsito e economia na CNH em 2025." />
+    <title>Vrumi Connect - O App de Aulas de Direção</title>
+    <meta name="description" content="Encontre instrutores credenciados, agende aulas de direção e pague com segurança. O Uber das autoescolas chegou." />
     
     <!-- Tailwind CSS (CDN is required for this runtime environment) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -106,6 +106,15 @@
         }
         ::-webkit-scrollbar-thumb:hover {
           background: #86868b; 
+        }
+        
+        /* Utility for hiding scrollbar but allowing scroll */
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
     </style>
     <script type="importmap">

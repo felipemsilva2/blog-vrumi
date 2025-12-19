@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Sparkles } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
@@ -7,10 +8,14 @@ interface Message {
   text: string;
 }
 
-export const VrumiAssistant: React.FC = () => {
+interface VrumiAssistantProps {
+  onWaitlistClick?: () => void;
+}
+
+export const VrumiAssistant: React.FC<VrumiAssistantProps> = ({ onWaitlistClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: 'Olá! Sou a IA da Vrumi. Posso ajudar com legislação ou dúvidas sobre o curso EAD?' }
+    { role: 'model', text: 'Olá! Sou o suporte virtual do Vrumi Connect. Estamos em fase de lançamento! Gostaria de entrar para nossa lista de espera exclusiva?' }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +41,16 @@ export const VrumiAssistant: React.FC = () => {
       if (!process.env.API_KEY) throw new Error("API Key missing");
 
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const systemInstruction = `Você é o Assistente Virtual da Vrumi. Responda de forma curta, inteligente e moderna. Defenda o ensino EAD.`;
+      const systemInstruction = `Você é o Assistente Virtual do Vrumi Connect. 
+      O aplicativo ainda NÃO está nas lojas (está em fase final de desenvolvimento).
+      
+      Sua principal missão é:
+      1. Explicar que o app conectará alunos a instrutores estilo Uber.
+      2. Informar que o lançamento é em breve.
+      3. Incentivar o usuário a entrar na "Lista de Espera" para garantir bônus de lançamento.
+      
+      Se o usuário perguntar como baixar, diga que ele pode se cadastrar na lista de espera no site agora mesmo para ser avisado.
+      Seja curto, prestativo e simpático.`;
 
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
@@ -51,7 +65,7 @@ export const VrumiAssistant: React.FC = () => {
       setMessages(prev => [...prev, { role: 'model', text }]);
 
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', text: 'Estou indisponível no momento.' }]);
+      setMessages(prev => [...prev, { role: 'model', text: 'Estou indisponível no momento, mas você pode deixar seu contato na nossa lista de espera!' }]);
     } finally {
       setIsLoading(false);
     }
@@ -85,8 +99,8 @@ export const VrumiAssistant: React.FC = () => {
                  <Sparkles size={16} className="text-white" />
               </div>
               <div>
-                 <h3 className="font-bold text-gray-900 text-sm">Vrumi Genius</h3>
-                 <p className="text-[10px] text-gray-500 uppercase tracking-wide font-bold">Online</p>
+                 <h3 className="font-bold text-gray-900 text-sm">Suporte Vrumi</h3>
+                 <p className="text-[10px] text-gray-500 uppercase tracking-wide font-bold">Lançamento em Breve</p>
               </div>
             </div>
           </div>
@@ -117,6 +131,16 @@ export const VrumiAssistant: React.FC = () => {
                </div>
             )}
             <div ref={messagesEndRef} />
+          </div>
+
+          {/* Special CTA */}
+          <div className="px-4 py-2">
+            <button 
+              onClick={onWaitlistClick}
+              className="w-full bg-emerald-50 text-vrumi text-[10px] font-black uppercase tracking-widest py-2 rounded-lg border border-vrumi/20 hover:bg-emerald-100 transition-colors"
+            >
+              Quero entrar na lista de espera
+            </button>
           </div>
 
           {/* Input */}
