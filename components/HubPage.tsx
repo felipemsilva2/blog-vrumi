@@ -25,8 +25,8 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
   return (
     <div className="animate-fade-in-up">
       
-      {/* Hero Section */}
-      <section className="relative pt-6 pb-20 px-6 overflow-hidden">
+      {/* Hero Section - Aumentado padding-top para limpar o header fixo */}
+      <section className="relative pt-28 md:pt-40 pb-20 px-6 overflow-hidden">
         <div className="container mx-auto max-w-6xl">
            <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="text-left relative z-10 order-2 md:order-1">
@@ -56,9 +56,9 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                  </div>
               </div>
 
-              {/* 3D App Visual (Atualizado com a nova UI do print) */}
-              <div className="relative h-[600px] perspective-1000 order-1 md:order-2 flex items-center justify-center">
-                  <div className="relative w-[300px] h-[600px] bg-black rounded-[45px] shadow-[0px_0px_0px_10px_#1f1f1f] border-[8px] border-gray-900 transform rotate-y-[-15deg] rotate-x-[5deg] hover:rotate-y-[0deg] transition-transform duration-700 ease-out group cursor-pointer overflow-hidden ring-1 ring-white/10">
+              {/* 3D App Visual - Removido h-[600px] fixo do container para melhor fluxo */}
+              <div className="relative perspective-1000 order-1 md:order-2 flex items-center justify-center">
+                  <div className="relative w-[280px] md:w-[300px] h-[580px] md:h-[600px] bg-black rounded-[45px] shadow-[0px_0px_0px_10px_#1f1f1f] border-[8px] border-gray-800 transform rotate-y-[-15deg] rotate-x-[5deg] hover:rotate-y-[0deg] transition-transform duration-700 ease-out group cursor-pointer overflow-hidden ring-1 ring-white/10 z-0">
                       {/* Notch */}
                       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-20"></div>
                       
