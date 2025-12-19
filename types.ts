@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
@@ -21,7 +22,7 @@ export interface Article {
   author: string;
   date: string;
   readTime: string;
-  category: string; // Added for Hub structure
+  category: string;
   content: React.ReactNode;
   tags: string[];
 }
@@ -31,4 +32,4 @@ export interface NavItem {
   path: string;
 }
 
-export type ViewState = 'hub' | 'article-mitos' | 'article-sindicato' | 'article-economia';
+export type ViewState = 'hub' | 'article' | 'contact' | 'terms' | 'help';

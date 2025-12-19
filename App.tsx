@@ -3,12 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { HubPage } from './components/HubPage';
 import { VrumiAssistant } from './components/VrumiAssistant';
 import { WaitlistModal } from './components/WaitlistModal';
+import { ArticlePage } from './components/ArticlePage';
+import { ContactPage } from './components/ContactPage';
+import { LegalPage } from './components/LegalPage';
 import { Menu, X, ArrowRight } from 'lucide-react';
+import { ViewState, Article } from './types';
+import { ARTICLES_CONTENT } from './constants';
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [viewState, setViewState] = useState<ViewState>('hub');
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,11 +25,31 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navigateTo = (state: ViewState, articleId?: string) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (state === 'article' && articleId) {
+      const art = ARTICLES_CONTENT.find(a => a.id === articleId);
+      if (art) setSelectedArticle(art);
+    }
+    setViewState(state);
+    setIsMenuOpen(false);
+  };
+
   const scrollToSection = (id: string) => {
+    if (viewState !== 'hub') {
+      navigateTo('hub');
+      // Pequeno delay para esperar a renderização do hub antes do scroll
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+
     setIsMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const offset = 100; // Ajuste para o header fixo
+      const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -35,6 +62,31 @@ export default function App() {
     }
   };
 
+  const renderContent = () => {
+    switch (viewState) {
+      case 'article':
+        return selectedArticle ? (
+          <ArticlePage 
+            article={selectedArticle} 
+            onBack={() => setViewState('hub')} 
+            onNavigate={(id) => {
+              const art = ARTICLES_CONTENT.find(a => a.id === id);
+              if (art) setSelectedArticle(art);
+              window.scrollTo(0,0);
+            }} 
+          />
+        ) : <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
+      case 'contact':
+        return <ContactPage onBack={() => setViewState('hub')} />;
+      case 'terms':
+        return <LegalPage type="terms" onBack={() => setViewState('hub')} />;
+      case 'help':
+        return <LegalPage type="help" onBack={() => setViewState('hub')} />;
+      default:
+        return <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background font-sans text-primary flex flex-col selection:bg-black selection:text-white">
       {/* Floating Dynamic Navbar */}
@@ -42,13 +94,13 @@ export default function App() {
         <div className={`
           pointer-events-auto
           transition-all duration-500 ease-in-out
-          ${scrolled ? 'w-[90%] md:w-[600px] bg-white/80 backdrop-blur-xl border border-white/20 shadow-apple' : 'w-[95%] bg-transparent border-transparent'}
+          ${scrolled || viewState !== 'hub' ? 'w-[90%] md:w-[600px] bg-white/80 backdrop-blur-xl border border-white/20 shadow-apple' : 'w-[95%] bg-transparent border-transparent'}
           rounded-full px-6 py-3 flex items-center justify-between
         `}>
           {/* Logo */}
           <div 
             className="cursor-pointer block group" 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => navigateTo('hub')}
           >
             <div className="flex items-center gap-2">
                 <span className="font-black text-lg tracking-tight text-gray-900 group-hover:text-vrumi transition-colors">VRUMI</span>
@@ -102,8 +154,8 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow pt-24">
-        <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />
+      <main className="flex-grow">
+        {renderContent()}
       </main>
 
       {/* Modern Footer */}
@@ -133,15 +185,15 @@ export default function App() {
             <div>
               <h4 className="text-black font-semibold text-sm mb-4">Suporte</h4>
               <ul className="space-y-3 text-xs">
-                <li><a href="#" className="hover:underline">Central de Ajuda</a></li>
-                <li><a href="#" className="hover:underline">Fale Conosco</a></li>
-                <li><a href="#" className="hover:underline">Termos de Uso</a></li>
+                <li><button onClick={() => navigateTo('help')} className="hover:underline">Central de Ajuda</button></li>
+                <li><button onClick={() => navigateTo('contact')} className="hover:underline">Fale Conosco</button></li>
+                <li><button onClick={() => navigateTo('terms')} className="hover:underline">Termos de Uso</button></li>
               </ul>
             </div>
             <div>
               <h4 className="text-black font-semibold text-sm mb-4">Social</h4>
               <ul className="space-y-3 text-xs">
-                <li><a href="#" className="hover:underline">Instagram</a></li>
+                <li><a href="https://www.instagram.com/vrumi.app/" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram</a></li>
                 <li><a href="#" className="hover:underline">LinkedIn</a></li>
                 <li><a href="#" className="hover:underline">TikTok</a></li>
               </ul>

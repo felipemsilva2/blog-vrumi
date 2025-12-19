@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FactCheck, Article } from './types';
 
@@ -19,12 +20,12 @@ export const FACTS: FactCheck[] = [
   {
     statement: "O pagamento é feito direto ao instrutor?",
     verdict: "Mito",
-    explanation: "Para sua segurança, o pagamento é feito via App (Cartão ou PIX) e o valor só é liberado ao instrutor após o Check-in da aula."
+    explanation: "Para sua segurança, o pagamento é feito via App (Cartão de Crédito - PIX em breve) e o valor só é liberado ao instrutor após o Check-in da aula."
   },
   {
-    statement: "Posso fazer aula no meu próprio carro?",
-    verdict: "Verdade",
-    explanation: "Sim! A plataforma permite agendar aulas no carro do instrutor ou no seu veículo próprio (para habilitados que querem perder o medo)."
+    statement: "Ainda sou obrigado a fazer todas as aulas na Autoescola?",
+    verdict: "Mito",
+    explanation: "Com a nova flexibilização da lei, a obrigatoriedade de pacotes fechados em CFCs diminuiu. O foco agora é o cumprimento das taxas e exames oficiais do DETRAN."
   }
 ];
 
@@ -32,7 +33,7 @@ export const COMPARISON_DATA = [
   { feature: 'Agendamento', presencial: 'Horário fixo e rígido', online: 'Flexível (App)', winner: 'online' },
   { feature: 'Instrutor', presencial: 'Definido pela escola', online: 'Você escolhe pelo perfil', winner: 'online' },
   { feature: 'Veículo', presencial: 'Padrão da Autoescola', online: 'Opção de carro próprio', winner: 'online' },
-  { feature: 'Pagamento', presencial: 'Burocrático / Boleto', online: 'Pix/Cartão no App', winner: 'online' },
+  { feature: 'Pagamento', presencial: 'Burocrático / Boleto', online: 'Cartão (Pix em breve)', winner: 'online' },
   { feature: 'Segurança', presencial: 'Padrão', online: 'Rastreio e Check-in QR', winner: 'online' },
 ];
 
@@ -54,12 +55,11 @@ export const ARTICLES_CONTENT: Article[] = [
         </p>
         <h2 className="text-2xl font-bold mt-8 mb-4">1. É obrigatório fazer todas as aulas no carro da autoescola?</h2>
         <p>
-          Sim e não. Durante o processo oficial para obtenção da CNH, você deve utilizar os veículos credenciados. 
-          Porém, para quem já é habilitado e quer treinar, o Vrumi permite o uso de carro próprio com instrutores parceiros.
+          Com as mudanças recentes na legislação, o modelo de aprendizado tornou-se mais flexível. Embora os exames do DETRAN permaneçam obrigatórios, a forma como você se prepara para eles está mudando, permitindo instrutores independentes e maior foco na prática real.
         </p>
         <h2 className="text-2xl font-bold mt-8 mb-4">2. Reprovar na prova prática é o fim do mundo?</h2>
         <p>
-          Absolutamente não. O nervosismo é o maior inimigo. Nossos dados mostram que 40% dos alunos reprovam na primeira tentativa por ansiedade, não por falta de técnica.
+          Absolutamente não. O nervosismo é o maior inimigo. Nossos dados mostram que 40% dos alunos reprovam na primeira tentativa por ansiedade, não por falta de técnica. Com o Vrumi, você pode treinar especificamente seus pontos fracos com o instrutor que te deixar mais calmo.
         </p>
       </>
     ),
@@ -80,7 +80,7 @@ export const ARTICLES_CONTENT: Article[] = [
             <h2 className="text-2xl font-bold mt-8 mb-4">Planeje suas aulas</h2>
             <p>Faltas não justificadas geram custos extras. Mantenha sua agenda organizada.</p>
             <h2 className="text-2xl font-bold mt-8 mb-4">Use a tecnologia a seu favor</h2>
-            <p>Aplicativos como o Vrumi ajudam a encontrar instrutores com melhores avaliações, garantindo que seu tempo de aula seja 100% aproveitado.</p>
+            <p>Com o fim da obrigatoriedade de exclusividade de algumas aulas em autoescolas, você pode contratar instrutores credenciados via Vrumi por preços muito mais competitivos, pagando apenas pelo que usar.</p>
         </>
     ),
     tags: ['Finanças', 'Planejamento'],
