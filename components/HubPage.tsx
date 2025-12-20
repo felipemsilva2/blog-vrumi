@@ -56,15 +56,11 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                  </div>
               </div>
 
-              {/* 3D App Visual - Responsivo e com escala para Mobile */}
+              {/* 3D App Visual */}
               <div className="relative perspective-1000 order-1 md:order-2 flex items-center justify-center scale-[0.85] sm:scale-90 md:scale-100 py-4 md:py-0">
                   <div className="relative w-[280px] md:w-[300px] h-[580px] md:h-[600px] bg-black rounded-[45px] shadow-[0px_0px_0px_10px_#1f1f1f] border-[8px] border-gray-800 transform md:rotate-y-[-15deg] md:rotate-x-[5deg] md:hover:rotate-y-[0deg] transition-transform duration-700 ease-out group cursor-pointer overflow-hidden ring-1 ring-white/10 z-0">
-                      {/* Notch */}
                       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-20"></div>
-                      
-                      {/* App Screen UI */}
                       <div className="absolute inset-0 bg-[#0a121e] flex flex-col overflow-hidden text-white font-sans">
-                          {/* Header Area */}
                           <div className="bg-[#004d40] pt-12 pb-6 px-5 rounded-b-[2rem]">
                               <div className="flex items-center justify-between mb-6">
                                   <div className="flex items-center gap-3">
@@ -93,7 +89,6 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                                   </button>
                               </div>
                           </div>
-                          {/* Scrollable Content */}
                           <div className="flex-1 overflow-y-auto px-5 pt-6 space-y-6 hide-scrollbar">
                               <div className="bg-[#003d33] rounded-2xl p-4 flex items-center justify-between border border-white/5">
                                   <div className="flex items-center gap-3">
@@ -116,7 +111,6 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                                   </div>
                               </div>
                           </div>
-                          {/* Tab Bar */}
                           <div className="bg-[#0a121e]/90 backdrop-blur-xl border-t border-white/5 p-4 pb-8 flex justify-around items-center">
                               <div className="flex flex-col items-center gap-1 text-vrumi">
                                   <Search size={22} />
@@ -131,19 +125,13 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                                   <span className="text-[8px] font-bold uppercase tracking-widest">Perfil</span>
                               </div>
                           </div>
-                          {/* Em Breve Overlay */}
                           <div className="absolute inset-0 z-50 pointer-events-none flex flex-col items-center justify-center">
                              <div className="bg-black/60 backdrop-blur-[4px] w-full h-full flex flex-col items-center justify-center p-8 text-center pointer-events-auto">
                                 <div className="w-14 h-14 bg-vrumi/20 rounded-2xl flex items-center justify-center mb-4 border border-vrumi/30">
                                     <Smartphone size={28} className="text-vrumi" />
                                 </div>
                                 <h4 className="text-2xl font-black text-white leading-tight mb-6">Em breve nas lojas.</h4>
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); onJoinWaitlist(); }}
-                                  className="bg-vrumi text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest"
-                                >
-                                  Me avise
-                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); onJoinWaitlist(); }} className="bg-vrumi text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest">Me avise</button>
                              </div>
                           </div>
                       </div>
@@ -153,11 +141,10 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
         </div>
       </section>
 
-      {/* Bento Grid Highlights - Ajustado para mobile */}
+      {/* Bento Grid Highlights */}
       <section className="bg-white py-12 md:py-16 px-4 md:px-6">
         <div className="container mx-auto max-w-6xl">
            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 md:gap-6 md:h-[600px]">
-              
               <div className="md:col-span-2 md:row-span-2 bg-[#F5F5F7] rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group min-h-[300px]">
                   <div className="relative z-10">
                       <span className="bg-white px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide mb-4 md:6 inline-block shadow-sm text-emerald-600">Marketplace</span>
@@ -165,7 +152,6 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                       <p className="text-gray-500 text-base md:text-lg font-medium max-w-sm">Filtre por avaliação, preço e proximidade.</p>
                   </div>
               </div>
-
               <div className="md:col-span-2 bg-black text-white rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden min-h-[200px]">
                   <div className="relative z-10 max-w-md">
                      <span className="text-emerald-400 font-bold text-xs tracking-widest uppercase mb-2 block">Dashboard</span>
@@ -173,7 +159,6 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                      <p className="text-gray-400 text-sm">Gerencie agenda e ganhos.</p>
                   </div>
               </div>
-
               <div className="bg-emerald-500 text-white rounded-[2rem] md:rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden min-h-[160px]">
                   <QrCode size={32} className="text-emerald-200 relative z-10" />
                   <div className="relative z-10">
@@ -181,7 +166,6 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                      <p className="text-emerald-100 font-medium text-xs md:text-sm mt-1">Validação digital.</p>
                   </div>
               </div>
-
               <div className="bg-white border border-gray-100 shadow-apple rounded-[2rem] md:rounded-[2.5rem] p-8 flex flex-col justify-between relative min-h-[160px]">
                  <div>
                     <span className="text-blue-500 font-bold text-xs tracking-widest uppercase mb-2 block">Verificado</span>
@@ -191,12 +175,11 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                     <ShieldCheck size={40} md:size={48} />
                  </div>
               </div>
-
            </div>
         </div>
       </section>
 
-      {/* Outras seções mantidas e otimizadas... */}
+      {/* SECTION: FOR STUDENTS */}
       <section id="students" className="py-20 md:py-24 px-4 md:px-6 bg-[#F5F5F7]">
          <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-center">
@@ -205,13 +188,16 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                   <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight leading-tight">Liberdade para dirigir. No seu ritmo.</h2>
                   <p className="text-lg md:text-xl text-gray-500 mb-8 leading-relaxed">Aprender a dirigir não precisa ser estressante. O Vrumi Connect é o "Uber" das aulas de direção.</p>
                   <div className="space-y-6">
-                     <div className="flex gap-4 p-4 md:p-0 bg-white md:bg-transparent rounded-2xl md:rounded-none">
+                     <div className="flex gap-4 p-4 md:p-0 bg-white md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none">
                         <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-600 shrink-0"><Search size={20} /></div>
                         <div><h4 className="text-lg md:text-xl font-bold text-gray-900">Busque e Compare</h4><p className="text-gray-500 text-sm">Filtre por categoria e preço.</p></div>
                      </div>
+                     <div className="flex gap-4 p-4 md:p-0 bg-white md:bg-transparent rounded-2xl md:rounded-none shadow-sm md:shadow-none">
+                        <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-emerald-600 shrink-0"><QrCode size={20} /></div>
+                        <div><h4 className="text-lg md:text-xl font-bold text-gray-900">Check-in Digital</h4><p className="text-gray-500 text-sm">Segurança total via QR Code.</p></div>
+                     </div>
                   </div>
                </div>
-               {/* Mobile Preview Otimizado */}
                <div className="flex-1 relative w-full max-w-[400px]">
                   <div className="bg-white rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-8 shadow-2xl relative z-10 border border-gray-100">
                      <div className="flex justify-between items-center mb-6">
@@ -235,7 +221,69 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
          </div>
       </section>
 
-      {/* Comparison Otimizado para Mobile */}
+      {/* SECTION: FOR INSTRUCTORS */}
+      <section id="instructors" className="py-24 px-4 md:px-6 bg-black text-white relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-900 rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
+         <div className="container mx-auto max-w-6xl relative z-10">
+            <div className="flex flex-col md:flex-row-reverse gap-16 items-center">
+               <div className="flex-1">
+                  <span className="text-emerald-400 font-bold text-sm uppercase tracking-widest mb-4 block">Para Instrutores</span>
+                  <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight leading-tight">Transforme seu carro em renda.</h2>
+                  <p className="text-lg md:text-xl text-gray-400 mb-8 leading-relaxed">Você é instrutor credenciado? O Vrumi Connect é sua ferramenta de gestão completa.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                      <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                          <Wallet className="text-emerald-400 mb-4" size={28} />
+                          <h4 className="font-bold text-lg mb-2 text-white">Pagamento Garantido</h4>
+                          <p className="text-gray-400 text-sm">Receba logo após o check-in da aula.</p>
+                      </div>
+                      <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                          <Calendar className="text-emerald-400 mb-4" size={28} />
+                          <h4 className="font-bold text-lg mb-2 text-white">Agenda Flexível</h4>
+                          <p className="text-gray-400 text-sm">Defina seus próprios horários.</p>
+                      </div>
+                  </div>
+               </div>
+               <div className="flex-1 w-full">
+                   <div className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 shadow-2xl">
+                       <h3 className="text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-bold mb-6">Ganhos da Semana</h3>
+                       <div className="text-4xl md:text-5xl font-bold text-white mb-2">R$ 1.850,00</div>
+                       <p className="text-emerald-400 font-medium mb-8 text-sm">+12% vs anterior</p>
+                       <div className="h-[150px] md:h-[200px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={dataChart}>
+                                  <Area type="monotone" dataKey="value" stroke="#10B981" strokeWidth={3} fill="#10B981" fillOpacity={0.1} />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                       </div>
+                   </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* SECTION: SAFETY */}
+      <section id="safety" className="py-20 md:py-24 px-4 md:px-6 bg-white">
+         <div className="container mx-auto max-w-4xl text-center">
+            <span className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">Segurança</span>
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-8 tracking-tight">Verificação rigorosa.</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                {[
+                  { icon: <ShieldCheck size={32} />, label: "CNH EAR", sub: "Detran" },
+                  { icon: <UserCheck size={32} />, label: "Antecedentes", sub: "Federal" },
+                  { icon: <Car size={32} />, label: "CRLV", sub: "Veículo" },
+                  { icon: <Star size={32} />, label: "Curso", sub: "Credencial" }
+                ].map((item, i) => (
+                  <div key={i} className="p-6 rounded-3xl bg-gray-50 border border-gray-100 flex flex-col items-center gap-3">
+                      <div className="w-12 h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center shadow-sm text-blue-500">{item.icon}</div>
+                      <h4 className="font-bold text-gray-900 text-sm md:text-base">{item.label}</h4>
+                      <p className="text-[10px] text-gray-500 uppercase font-bold">{item.sub}</p>
+                  </div>
+                ))}
+            </div>
+         </div>
+      </section>
+
+      {/* Comparison Section */}
       <section className="bg-[#F5F5F7] py-16 md:py-20 px-4 md:px-6">
          <div className="container mx-auto max-w-3xl">
             <div className="text-center mb-10">
@@ -259,12 +307,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
       <section className="py-20 md:py-24 px-4 md:px-6 bg-white text-center">
          <div className="container mx-auto max-w-4xl">
             <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-8 tracking-tighter leading-tight">Falta pouco para você dirigir.</h2>
-            <button 
-              onClick={onJoinWaitlist}
-              className="bg-black text-white px-10 py-5 rounded-2xl font-bold hover:bg-gray-800 transition-all flex items-center justify-center gap-2 text-lg md:text-xl shadow-xl w-full sm:w-auto mx-auto active:scale-95"
-            >
-                Entrar na Lista VIP
-            </button>
+            <button onClick={onJoinWaitlist} className="bg-black text-white px-10 py-5 rounded-2xl font-bold hover:bg-gray-800 transition-all flex items-center justify-center gap-2 text-lg md:text-xl shadow-xl w-full sm:w-auto mx-auto active:scale-95">Entrar na Lista VIP</button>
          </div>
       </section>
 
