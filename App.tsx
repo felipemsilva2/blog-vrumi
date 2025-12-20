@@ -85,9 +85,9 @@ export default function App() {
           rounded-2xl md:rounded-full px-5 py-3 md:py-3 flex items-center justify-between
         `}>
           <div className="cursor-pointer block group" onClick={() => navigateTo('hub')}>
-            <div className="flex items-center gap-2">
-                <span className="font-black text-lg tracking-tight text-gray-900">VRUMI</span>
-                <span className="hidden xs:inline-block text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Connect</span>
+            <div className="flex items-baseline gap-1">
+                <span className="font-black text-xl tracking-tighter text-gray-900">VRUMI</span>
+                <span className="text-sm font-bold text-vrumi tracking-tight">Connect</span>
             </div>
           </div>
 

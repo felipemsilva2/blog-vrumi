@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useRef } from 'react';
 import { Article } from '../types';
-import { ArrowLeft, Share2, Clock, ChevronRight, Bookmark } from 'lucide-react';
+import { ArrowLeft, Share2, Clock, ChevronRight, Bookmark, Facebook, Twitter, Instagram, Link as LinkIcon, Check, Copy } from 'lucide-react';
 import { ARTICLES_CONTENT } from '../constants';
 
 interface ArticlePageProps {
@@ -11,6 +12,9 @@ interface ArticlePageProps {
 
 export const ArticlePage: React.FC<ArticlePageProps> = ({ article, onBack, onNavigate }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,16 +22,82 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ article, onBack, onNav
       const progress = (window.scrollY / totalHeight) * 100;
       setScrollProgress(progress);
     };
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setIsShareOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleShareClick = async () => {
+    // Try native share first for Mobile
+    if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        try {
+            await navigator.share({
+                title: article.title,
+                text: article.subtitle,
+                url: window.location.href,
+            });
+        } catch (error) {
+            console.log('Error sharing:', error);
+        }
+    } else {
+        // Desktop or non-supported native share: Toggle Menu
+        setIsShareOpen(!isShareOpen);
+    }
+  };
+
+  const handleSocialShare = (network: 'facebook' | 'twitter' | 'instagram' | 'copy') => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(article.title);
+
+    if (network === 'facebook') {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+        setIsShareOpen(false);
+    } else if (network === 'twitter') {
+        window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+        setIsShareOpen(false);
+    } else if (network === 'instagram') {
+        // Instagram doesn't allow direct web sharing via URL params. 
+        // We copy the link and notify the user.
+        navigator.clipboard.writeText(window.location.href);
+        showToast('Link copiado! Cole no Instagram.');
+        setIsShareOpen(false);
+    } else if (network === 'copy') {
+        navigator.clipboard.writeText(window.location.href);
+        showToast('Link copiado para a área de transferência!');
+        setIsShareOpen(false);
+    }
+  };
 
   // Get related articles (excluding current one)
   const relatedArticles = ARTICLES_CONTENT.filter(a => a.id !== article.id).slice(0, 2);
 
   return (
-    <div className="animate-fade-in-up pb-20 bg-white min-h-screen selection:bg-black selection:text-white">
+    <div className="animate-fade-in-up pb-20 bg-white min-h-screen selection:bg-black selection:text-white relative">
       
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[70] bg-black text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2 animate-fade-in-up">
+            <Check size={16} className="text-emerald-400" />
+            <span className="text-sm font-bold">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-[60]">
         <div 
@@ -49,13 +119,54 @@ export const ArticlePage: React.FC<ArticlePageProps> = ({ article, onBack, onNav
                {article.title}
             </span>
          </div>
-         <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
+         <div className="flex items-center gap-2 relative" ref={shareMenuRef}>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hidden sm:block">
                 <Bookmark size={18} />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
+            
+            <button 
+                onClick={handleShareClick}
+                className={`p-2 rounded-full transition-colors ${isShareOpen ? 'bg-black text-white' : 'hover:bg-gray-100 text-gray-600'}`}
+            >
                 <Share2 size={18} />
             </button>
+
+            {/* Share Dropdown Menu */}
+            {isShareOpen && (
+                <div className="absolute top-full right-0 mt-3 w-56 bg-white rounded-2xl shadow-apple-hover border border-gray-100 p-2 animate-scale-in origin-top-right">
+                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 py-2">Compartilhar</div>
+                    
+                    <button onClick={() => handleSocialShare('facebook')} className="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 rounded-xl transition-colors text-left group">
+                        <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Facebook size={16} />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700">Facebook</span>
+                    </button>
+
+                    <button onClick={() => handleSocialShare('twitter')} className="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 rounded-xl transition-colors text-left group">
+                        <div className="w-8 h-8 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Twitter size={16} />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700">Twitter / X</span>
+                    </button>
+
+                    <button onClick={() => handleSocialShare('instagram')} className="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 rounded-xl transition-colors text-left group">
+                        <div className="w-8 h-8 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Instagram size={16} />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700">Instagram</span>
+                    </button>
+                    
+                    <div className="h-px bg-gray-100 my-1"></div>
+
+                    <button onClick={() => handleSocialShare('copy')} className="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 rounded-xl transition-colors text-left group">
+                        <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <LinkIcon size={16} />
+                        </div>
+                        <span className="text-sm font-semibold text-gray-700">Copiar Link</span>
+                    </button>
+                </div>
+            )}
          </div>
       </div>
 
