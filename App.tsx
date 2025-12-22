@@ -17,20 +17,64 @@ export default function App() {
   const [viewState, setViewState] = useState<ViewState>('hub');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
+  // Router Logic: Handle URL changes and Initial Load
   useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      if (path === '/termos-de-uso') {
+        setViewState('terms');
+      } else if (path === '/politica-de-privacidade') {
+        setViewState('privacy');
+      } else if (path === '/ajuda') {
+        setViewState('help');
+      } else if (path === '/contato') {
+        setViewState('contact');
+      } else {
+        setViewState('hub');
+      }
+      window.scrollTo(0, 0);
+    };
+
+    // Check initial path
+    handleLocationChange();
+
+    // Listen for browser back/forward buttons
+    window.addEventListener('popstate', handleLocationChange);
+    
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const navigateTo = (state: ViewState, articleId?: string) => {
+    // Determine the URL path based on state
+    let path = '/';
+    if (state === 'terms') path = '/termos-de-uso';
+    else if (state === 'privacy') path = '/politica-de-privacidade';
+    else if (state === 'help') path = '/ajuda';
+    else if (state === 'contact') path = '/contato';
+    
+    // Update URL without reloading (SPA feel)
+    if (state !== 'article') {
+       window.history.pushState({}, '', path);
+    } else {
+       // For articles, we might keep root or add /article/id if we wanted complex routing
+       window.history.pushState({}, '', '/'); 
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (state === 'article' && articleId) {
       const art = ARTICLES_CONTENT.find(a => a.id === articleId);
       if (art) setSelectedArticle(art);
     }
+    
     setViewState(state);
     setIsMenuOpen(false);
   };
@@ -59,7 +103,7 @@ export default function App() {
         return selectedArticle ? (
           <ArticlePage 
             article={selectedArticle} 
-            onBack={() => setViewState('hub')} 
+            onBack={() => navigateTo('hub')} 
             onNavigate={(id) => {
               const art = ARTICLES_CONTENT.find(a => a.id === id);
               if (art) setSelectedArticle(art);
@@ -67,10 +111,10 @@ export default function App() {
             }} 
           />
         ) : <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
-      case 'contact': return <ContactPage onBack={() => setViewState('hub')} />;
-      case 'terms': return <LegalPage type="terms" onBack={() => setViewState('hub')} />;
-      case 'privacy': return <LegalPage type="privacy" onBack={() => setViewState('hub')} />;
-      case 'help': return <LegalPage type="help" onBack={() => setViewState('hub')} />;
+      case 'contact': return <ContactPage onBack={() => navigateTo('hub')} />;
+      case 'terms': return <LegalPage type="terms" onBack={() => navigateTo('hub')} />;
+      case 'privacy': return <LegalPage type="privacy" onBack={() => navigateTo('hub')} />;
+      case 'help': return <LegalPage type="help" onBack={() => navigateTo('hub')} />;
       default: return <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
     }
   };
@@ -142,15 +186,47 @@ export default function App() {
                 <ul className="space-y-3 text-xs">
                   <li><button onClick={() => scrollToSection('students')} className="hover:underline">Alunos</button></li>
                   <li><button onClick={() => scrollToSection('instructors')} className="hover:underline">Instrutores</button></li>
-                  <li><button onClick={() => navigateTo('contact')} className="hover:underline">Contato</button></li>
+                  <li>
+                    <a 
+                      href="/contato" 
+                      onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}
+                      className="hover:underline"
+                    >
+                      Contato
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 className="text-black font-semibold text-sm mb-4">Legal</h4>
                 <ul className="space-y-3 text-xs">
-                   <li><button onClick={() => navigateTo('terms')} className="hover:underline">Termos de Uso</button></li>
-                   <li><button onClick={() => navigateTo('privacy')} className="hover:underline">Privacidade</button></li>
-                   <li><button onClick={() => navigateTo('help')} className="hover:underline">Central de Ajuda</button></li>
+                   <li>
+                     <a 
+                       href="/termos-de-uso" 
+                       onClick={(e) => { e.preventDefault(); navigateTo('terms'); }}
+                       className="hover:underline"
+                     >
+                       Termos de Uso
+                     </a>
+                   </li>
+                   <li>
+                     <a 
+                       href="/politica-de-privacidade" 
+                       onClick={(e) => { e.preventDefault(); navigateTo('privacy'); }}
+                       className="hover:underline"
+                     >
+                       Privacidade
+                     </a>
+                   </li>
+                   <li>
+                     <a 
+                       href="/ajuda" 
+                       onClick={(e) => { e.preventDefault(); navigateTo('help'); }}
+                       className="hover:underline"
+                     >
+                       Central de Ajuda
+                     </a>
+                   </li>
                 </ul>
               </div>
               <div>
