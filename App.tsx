@@ -69,6 +69,7 @@ export default function App() {
         ) : <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
       case 'contact': return <ContactPage onBack={() => setViewState('hub')} />;
       case 'terms': return <LegalPage type="terms" onBack={() => setViewState('hub')} />;
+      case 'privacy': return <LegalPage type="privacy" onBack={() => setViewState('hub')} />;
       case 'help': return <LegalPage type="help" onBack={() => setViewState('hub')} />;
       default: return <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
     }
@@ -102,7 +103,7 @@ export default function App() {
               onClick={() => setIsWaitlistOpen(true)}
               className="bg-black text-white px-4 md:px-5 py-2 rounded-xl md:rounded-full text-[11px] md:text-xs font-bold active:scale-95 transition-all shadow-sm items-center gap-1 flex"
             >
-              Lista <span className="hidden sm:inline">VIP</span> <ArrowRight size={12} className="hidden sm:block" />
+              Me avise <ArrowRight size={12} className="hidden sm:block" />
             </button>
             <button className="md:hidden text-gray-700 p-2 bg-gray-100 rounded-xl" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -118,7 +119,7 @@ export default function App() {
                 <button onClick={() => scrollToSection('instructors')} className="text-xl font-bold text-gray-900 py-2">Instrutores</button>
                 <button onClick={() => scrollToSection('safety')} className="text-xl font-bold text-gray-900 py-2">Segurança</button>
                 <hr className="border-gray-100" />
-                <button onClick={() => { setIsWaitlistOpen(true); setIsMenuOpen(false); }} className="bg-vrumi text-white py-4 rounded-2xl font-black uppercase tracking-widest w-full">Entrar na Lista</button>
+                <button onClick={() => { setIsWaitlistOpen(true); setIsMenuOpen(false); }} className="bg-vrumi text-white py-4 rounded-2xl font-black uppercase tracking-widest w-full">Me avise</button>
              </nav>
           </div>
         )}
@@ -135,12 +136,21 @@ export default function App() {
               <span className="text-black font-bold text-xl block mb-4">Vrumi Connect</span>
               <p className="text-xs leading-relaxed max-w-xs mx-auto md:mx-0">Marketplace de aulas de direção. Segurança e liberdade.</p>
             </div>
-            <div className="grid grid-cols-2 gap-8 md:col-span-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:col-span-3">
               <div>
                 <h4 className="text-black font-semibold text-sm mb-4">Produto</h4>
                 <ul className="space-y-3 text-xs">
                   <li><button onClick={() => scrollToSection('students')} className="hover:underline">Alunos</button></li>
                   <li><button onClick={() => scrollToSection('instructors')} className="hover:underline">Instrutores</button></li>
+                  <li><button onClick={() => navigateTo('contact')} className="hover:underline">Contato</button></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-black font-semibold text-sm mb-4">Legal</h4>
+                <ul className="space-y-3 text-xs">
+                   <li><button onClick={() => navigateTo('terms')} className="hover:underline">Termos de Uso</button></li>
+                   <li><button onClick={() => navigateTo('privacy')} className="hover:underline">Privacidade</button></li>
+                   <li><button onClick={() => navigateTo('help')} className="hover:underline">Central de Ajuda</button></li>
                 </ul>
               </div>
               <div>
