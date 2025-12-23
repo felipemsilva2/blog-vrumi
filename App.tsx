@@ -166,7 +166,7 @@ export default function App() {
                 </>
               )}
               <a
-                href="vrumi://connect/painel-instrutor"
+                href={`vrumi://connect/painel-instrutor${window.location.search}`}
                 className="inline-block w-full bg-black text-white font-bold py-4 px-6 rounded-2xl hover:bg-gray-800 transition-colors mb-4"
               >
                 Abrir no App Vrumi
