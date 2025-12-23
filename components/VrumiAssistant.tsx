@@ -38,9 +38,12 @@ export const VrumiAssistant: React.FC<VrumiAssistantProps> = ({ onWaitlistClick 
     setIsLoading(true);
 
     try {
-      if (!process.env.API_KEY) throw new Error("API Key missing");
+      // Safe check for process.env to avoid Uncaught ReferenceError in browser-only envs
+      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+      
+      if (!apiKey) throw new Error("API Key missing");
 
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const systemInstruction = `Você é o Assistente Virtual do Vrumi Connect. 
       O aplicativo ainda NÃO está nas lojas (está em fase final de desenvolvimento).
       

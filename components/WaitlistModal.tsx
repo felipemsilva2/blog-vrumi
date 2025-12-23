@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, User, Mail, ChevronRight, Loader2, Database, AlertCircle } from 'lucide-react';
+import { X, Check, ChevronRight, Loader2, Info } from 'lucide-react';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -68,6 +68,11 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
     }
   };
 
+  const handleReset = () => {
+    setFormData({ ...formData, name: '', email: '' });
+    setStep('form');
+  };
+
   const handleSecretClick = () => {
     setClickCount(prev => prev + 1);
     if (clickCount + 1 >= 5) {
@@ -81,13 +86,13 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={onClose} />
       
       <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-scale-in max-h-[95vh] flex flex-col">
-        <button onClick={onClose} className="absolute top-6 right-6 p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-full transition-all z-10">
+        <button onClick={onClose} className="absolute top-6 right-6 p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-full transition-all z-20">
           <X size={20} />
         </button>
 
-        <div className="flex-1 overflow-y-auto p-8 sm:p-10 hide-scrollbar pb-[env(safe-area-inset-bottom)]">
-          {step === 'form' && (
-            <>
+        {/* Form View Container */}
+        {step === 'form' && (
+          <div className="flex-1 overflow-y-auto p-8 sm:p-10 hide-scrollbar pb-[env(safe-area-inset-bottom)]">
               <div className="mb-6 md:mb-8">
                 <span className="text-vrumi font-bold text-[10px] md:text-xs uppercase tracking-widest mb-2 block">Lista de Espera</span>
                 <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight">Seja o primeiro a saber.</h3>
@@ -108,18 +113,85 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose })
                   {loading ? <Loader2 size={20} className="animate-spin" /> : <>Garantir Acesso <ChevronRight size={18} /></>}
                 </button>
               </form>
-            </>
-          )}
+              
+              {/* Secret Area trigger */}
+              <div onClick={handleSecretClick} className="w-full h-8 mt-4 opacity-0 cursor-default"></div>
+          </div>
+        )}
 
-          {step === 'success' && (
-            <div className="text-center py-6 flex flex-col items-center">
-              <div onClick={handleSecretClick} className="w-16 h-16 bg-emerald-100 text-vrumi rounded-full flex items-center justify-center mb-6 animate-bounce"><CheckCircle2 size={32} /></div>
-              <h3 className="text-2xl font-black text-gray-900 mb-4">Você está na lista!</h3>
-              <p className="text-gray-500 mb-8 text-sm">Avisaremos por e-mail assim que liberarmos.</p>
-              <button onClick={onClose} className="w-full bg-black text-white font-bold py-4 rounded-xl active:scale-95 transition-all">Fechar</button>
-            </div>
-          )}
-        </div>
+        {/* Success View Styled like Request */}
+        {step === 'success' && (
+          <div className="relative w-full h-full flex flex-col items-center pt-0 pb-10 overflow-hidden">
+             {/* Background Gradient - Changed from sky to emerald */}
+             <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-emerald-200 via-emerald-50 to-white z-0"></div>
+
+             <div className="relative z-10 w-full px-8 flex flex-col items-center mt-16">
+                {/* Main Badge */}
+                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl mb-8 ring-8 ring-white/50 backdrop-blur-sm animate-bounce-short">
+                   <div className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-inner">
+                      <Check size={32} strokeWidth={4} />
+                   </div>
+                </div>
+
+                <div className="text-center mb-10">
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-1 tracking-tight leading-none">Você está na lista!</h2>
+                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight opacity-90">Obrigado por se juntar.</h3>
+                    <p className="text-gray-500 mt-4 text-sm max-w-[260px] mx-auto leading-relaxed">
+                        Você estará entre os primeiros a ter acesso quando o Vrumi estiver disponível.
+                    </p>
+                </div>
+
+                {/* Info Cards Container */}
+                <div className="w-full bg-white border border-gray-100 rounded-3xl shadow-lg mb-8 overflow-hidden">
+                   {/* Card 1 */}
+                   <div className="p-5 flex items-start text-left gap-4 border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                         <Check size={14} strokeWidth={3} />
+                      </div>
+                      <div>
+                         <h4 className="font-bold text-gray-900 text-sm">Acesso prioritário</h4>
+                         <p className="text-xs text-gray-500 mt-1 leading-relaxed">Você terá acesso antes do lançamento público. Fique de olho no seu e-mail!</p>
+                      </div>
+                   </div>
+                   {/* Card 2 */}
+                   <div className="p-5 flex items-start text-left gap-4 hover:bg-gray-50 transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                         <Info size={14} strokeWidth={3} />
+                      </div>
+                      <div>
+                         <h4 className="font-bold text-gray-900 text-sm">Fique atento</h4>
+                         <p className="text-xs text-gray-500 mt-1 leading-relaxed">Em breve, mais detalhes do lançamento e de como aproveitar o Vrumi.</p>
+                      </div>
+                   </div>
+                </div>
+
+                <button 
+                    onClick={handleReset} 
+                    className="text-emerald-600 hover:text-emerald-800 text-xs font-bold uppercase tracking-widest hover:underline decoration-2 underline-offset-4 transition-all"
+                >
+                   Cadastrar outro E-mail
+                </button>
+             </div>
+          </div>
+        )}
+
+        {/* Admin View (Hidden Feature) */}
+        {step === 'admin' && (
+             <div className="flex-1 overflow-y-auto p-8">
+                 <h3 className="text-xl font-bold mb-4">Leads Capturados ({leads.length})</h3>
+                 <div className="space-y-3">
+                    {leads.map((l, i) => (
+                        <div key={i} className="bg-gray-100 p-3 rounded-lg text-xs">
+                            <div className="font-bold">{l.name} <span className="text-vrumi">({l.type === 'student' ? 'Aluno' : 'Instrutor'})</span></div>
+                            <div className="text-gray-500">{l.email}</div>
+                            <div className="text-gray-400 text-[10px] mt-1">{new Date(l.date).toLocaleString()}</div>
+                        </div>
+                    ))}
+                    {leads.length === 0 && <p className="text-gray-500">Nenhum lead ainda.</p>}
+                 </div>
+                 <button onClick={() => setStep('form')} className="mt-4 text-vrumi font-bold text-sm">Voltar</button>
+             </div>
+        )}
       </div>
     </div>
   );

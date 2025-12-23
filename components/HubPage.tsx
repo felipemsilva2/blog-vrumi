@@ -3,8 +3,8 @@ import React from 'react';
 import { COMPARISON_DATA } from '../constants';
 import { 
   Mail, ArrowRight, Smartphone, ShieldCheck, MapPin, Star, QrCode, Search, 
-  Calendar, Car, Wallet, Clock, UserCheck, Sparkles, Sun, Gift, Bike, 
-  Truck, Bus, Home, User, ChevronRight, Filter
+  Calendar, Car, Wallet, Clock, UserCheck, Sun, Ticket, Bike, 
+  Truck, Bus, Home, User, ChevronRight, Filter, Loader2
 } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 
@@ -30,8 +30,8 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
         <div className="container mx-auto max-w-6xl">
            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="text-left relative z-10 order-2 md:order-1">
-                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] md:text-xs font-bold rounded-full mb-6 tracking-widest uppercase animate-pulse">
-                    <Sparkles size={14} /> Lançamento em breve
+                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] md:text-xs font-bold rounded-full mb-6 tracking-widest uppercase border border-emerald-100/50">
+                    <Loader2 size={14} className="animate-spin" /> Lançamento em breve
                  </div>
                  <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-gray-900 leading-[1.1] md:leading-[0.95] tracking-tighter mb-6">
                     Aprenda a dirigir<br/>
@@ -40,18 +40,18 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                  <p className="text-lg md:text-xl text-gray-500 mb-8 max-w-lg leading-relaxed font-medium">
                     O <strong>Vrumi Connect</strong> conecta alunos a instrutores credenciados. Agende aulas, pague com segurança e faça check-in pelo app.
                  </p>
-                 <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                 <div className="flex flex-row items-center gap-3">
                      <button 
                         onClick={onJoinWaitlist}
-                        className="bg-black text-white px-8 py-4 rounded-2xl md:rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all active:scale-95 shadow-xl text-base md:text-lg"
+                        className="bg-black text-white px-5 md:px-8 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all active:scale-95 shadow-xl text-xs sm:text-sm md:text-base whitespace-nowrap"
                      >
-                        Entrar na Lista de Espera <ArrowRight size={18} />
+                        Entrar na Lista <ArrowRight size={16} />
                      </button>
                      <button 
                         onClick={() => document.getElementById('students')?.scrollIntoView({behavior: 'smooth'})}
-                        className="bg-white text-black border border-gray-200 px-8 py-4 rounded-2xl md:rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all text-base md:text-lg"
+                        className="bg-white text-black border border-gray-200 px-5 md:px-8 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all text-xs sm:text-sm md:text-base whitespace-nowrap"
                      >
-                        Como vai funcionar?
+                        Como funciona?
                      </button>
                  </div>
               </div>
@@ -93,7 +93,7 @@ export const HubPage: React.FC<HubPageProps> = ({ onJoinWaitlist }) => {
                               <div className="bg-[#003d33] rounded-2xl p-4 flex items-center justify-between border border-white/5">
                                   <div className="flex items-center gap-3">
                                       <div className="w-10 h-10 bg-vrumi/20 rounded-xl flex items-center justify-center text-vrumi">
-                                          <Gift size={20} />
+                                          <Ticket size={20} />
                                       </div>
                                       <span className="text-xs font-bold text-vrumi-light">10% OFF na 1ª Aula</span>
                                   </div>

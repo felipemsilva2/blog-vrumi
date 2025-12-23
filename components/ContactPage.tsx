@@ -89,6 +89,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
                 <input required name="email" type="email" className="w-full bg-gray-50 border-none rounded-2xl py-4 px-5 focus:ring-2 focus:ring-vrumi transition-all outline-none" />
               </div>
               <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-400 ml-1">WhatsApp (Opcional)</label>
+                <input name="whatsapp" type="tel" placeholder="(00) 00000-0000" className="w-full bg-gray-50 border-none rounded-2xl py-4 px-5 focus:ring-2 focus:ring-vrumi transition-all outline-none" />
+              </div>
+              <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-gray-400 ml-1">Sua Mensagem</label>
                 <textarea required name="message" rows={4} className="w-full bg-gray-50 border-none rounded-2xl py-4 px-5 focus:ring-2 focus:ring-vrumi transition-all outline-none resize-none" />
               </div>
