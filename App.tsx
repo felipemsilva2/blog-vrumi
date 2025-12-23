@@ -21,6 +21,8 @@ export default function App() {
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
+      const searchParams = new URLSearchParams(window.location.search);
+
       if (path === '/termos-de-uso') {
         setViewState('terms');
       } else if (path === '/politica-de-privacidade') {
@@ -29,6 +31,9 @@ export default function App() {
         setViewState('help');
       } else if (path === '/contato') {
         setViewState('contact');
+      } else if (path === '/connect/painel-instrutor') {
+        // Stripe onboarding callback page
+        setViewState('stripe-callback');
       } else {
         setViewState('hub');
       }
@@ -40,7 +45,7 @@ export default function App() {
 
     // Listen for browser back/forward buttons
     window.addEventListener('popstate', handleLocationChange);
-    
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -59,22 +64,22 @@ export default function App() {
     else if (state === 'privacy') path = '/politica-de-privacidade';
     else if (state === 'help') path = '/ajuda';
     else if (state === 'contact') path = '/contato';
-    
+
     // Update URL without reloading (SPA feel)
     if (state !== 'article') {
-       window.history.pushState({}, '', path);
+      window.history.pushState({}, '', path);
     } else {
-       // For articles, we might keep root or add /article/id if we wanted complex routing
-       window.history.pushState({}, '', '/'); 
+      // For articles, we might keep root or add /article/id if we wanted complex routing
+      window.history.pushState({}, '', '/');
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
     if (state === 'article' && articleId) {
       const art = ARTICLES_CONTENT.find(a => a.id === articleId);
       if (art) setSelectedArticle(art);
     }
-    
+
     setViewState(state);
     setIsMenuOpen(false);
   };
@@ -101,20 +106,77 @@ export default function App() {
     switch (viewState) {
       case 'article':
         return selectedArticle ? (
-          <ArticlePage 
-            article={selectedArticle} 
-            onBack={() => navigateTo('hub')} 
+          <ArticlePage
+            article={selectedArticle}
+            onBack={() => navigateTo('hub')}
             onNavigate={(id) => {
               const art = ARTICLES_CONTENT.find(a => a.id === id);
               if (art) setSelectedArticle(art);
-              window.scrollTo(0,0);
-            }} 
+              window.scrollTo(0, 0);
+            }}
           />
         ) : <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
       case 'contact': return <ContactPage onBack={() => navigateTo('hub')} />;
       case 'terms': return <LegalPage type="terms" onBack={() => navigateTo('hub')} />;
       case 'privacy': return <LegalPage type="privacy" onBack={() => navigateTo('hub')} />;
       case 'help': return <LegalPage type="help" onBack={() => navigateTo('hub')} />;
+      case 'stripe-callback':
+        const params = new URLSearchParams(window.location.search);
+        const isSuccess = params.get('stripe_onboarded') === 'true';
+        const isRefresh = params.get('stripe_refresh') === 'true';
+
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-6 pt-24">
+            <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center">
+              {isSuccess ? (
+                <>
+                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">Conta Conectada!</h1>
+                  <p className="text-gray-600 mb-8">
+                    Sua conta Stripe foi conectada com sucesso. Você já pode receber pagamentos dos alunos.
+                  </p>
+                </>
+              ) : isRefresh ? (
+                <>
+                  <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">Sessão Expirada</h1>
+                  <p className="text-gray-600 mb-8">
+                    A sessão de cadastro expirou. Por favor, volte ao aplicativo e tente novamente.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">Painel do Instrutor</h1>
+                  <p className="text-gray-600 mb-8">
+                    Use o aplicativo Vrumi para acessar seu painel de instrutor.
+                  </p>
+                </>
+              )}
+              <a
+                href="vrumi://connect/painel-instrutor"
+                className="inline-block w-full bg-black text-white font-bold py-4 px-6 rounded-2xl hover:bg-gray-800 transition-colors mb-4"
+              >
+                Abrir no App Vrumi
+              </a>
+              <p className="text-sm text-gray-500">
+                Não tem o app? <a href="/" className="text-black font-semibold underline">Baixe aqui</a>
+              </p>
+            </div>
+          </div>
+        );
       default: return <HubPage onJoinWaitlist={() => setIsWaitlistOpen(true)} />;
     }
   };
@@ -131,8 +193,8 @@ export default function App() {
         `}>
           <div className="cursor-pointer block group" onClick={() => navigateTo('hub')}>
             <div className="flex items-baseline gap-1">
-                <span className="font-black text-xl tracking-tighter text-gray-900">VRUMI</span>
-                <span className="text-sm font-bold text-vrumi tracking-tight">Connect</span>
+              <span className="font-black text-xl tracking-tighter text-gray-900">VRUMI</span>
+              <span className="text-sm font-bold text-vrumi tracking-tight">Connect</span>
             </div>
           </div>
 
@@ -143,7 +205,7 @@ export default function App() {
           </nav>
 
           <div className="flex items-center gap-2 md:gap-3">
-            <button 
+            <button
               onClick={() => setIsWaitlistOpen(true)}
               className="bg-black text-white px-4 md:px-5 py-2 rounded-xl md:rounded-full text-[11px] md:text-xs font-bold active:scale-95 transition-all shadow-sm items-center gap-1 flex"
             >
@@ -158,13 +220,13 @@ export default function App() {
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
           <div className="absolute top-[80px] left-4 right-4 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl p-6 pointer-events-auto animate-scale-in border border-gray-100 z-[70]">
-             <nav className="flex flex-col gap-4 text-center">
-                <button onClick={() => scrollToSection('students')} className="text-xl font-bold text-gray-900 py-2">Alunos</button>
-                <button onClick={() => scrollToSection('instructors')} className="text-xl font-bold text-gray-900 py-2">Instrutores</button>
-                <button onClick={() => scrollToSection('safety')} className="text-xl font-bold text-gray-900 py-2">Segurança</button>
-                <hr className="border-gray-100" />
-                <button onClick={() => { setIsWaitlistOpen(true); setIsMenuOpen(false); }} className="bg-vrumi text-white py-4 rounded-2xl font-black uppercase tracking-widest w-full">Me avise</button>
-             </nav>
+            <nav className="flex flex-col gap-4 text-center">
+              <button onClick={() => scrollToSection('students')} className="text-xl font-bold text-gray-900 py-2">Alunos</button>
+              <button onClick={() => scrollToSection('instructors')} className="text-xl font-bold text-gray-900 py-2">Instrutores</button>
+              <button onClick={() => scrollToSection('safety')} className="text-xl font-bold text-gray-900 py-2">Segurança</button>
+              <hr className="border-gray-100" />
+              <button onClick={() => { setIsWaitlistOpen(true); setIsMenuOpen(false); }} className="bg-vrumi text-white py-4 rounded-2xl font-black uppercase tracking-widest w-full">Me avise</button>
+            </nav>
           </div>
         )}
       </header>
@@ -187,8 +249,8 @@ export default function App() {
                   <li><button onClick={() => scrollToSection('students')} className="hover:underline">Alunos</button></li>
                   <li><button onClick={() => scrollToSection('instructors')} className="hover:underline">Instrutores</button></li>
                   <li>
-                    <a 
-                      href="/contato" 
+                    <a
+                      href="/contato"
                       onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}
                       className="hover:underline"
                     >
@@ -200,33 +262,33 @@ export default function App() {
               <div>
                 <h4 className="text-black font-semibold text-sm mb-4">Legal</h4>
                 <ul className="space-y-3 text-xs">
-                   <li>
-                     <a 
-                       href="/termos-de-uso" 
-                       onClick={(e) => { e.preventDefault(); navigateTo('terms'); }}
-                       className="hover:underline"
-                     >
-                       Termos de Uso
-                     </a>
-                   </li>
-                   <li>
-                     <a 
-                       href="/politica-de-privacidade" 
-                       onClick={(e) => { e.preventDefault(); navigateTo('privacy'); }}
-                       className="hover:underline"
-                     >
-                       Privacidade
-                     </a>
-                   </li>
-                   <li>
-                     <a 
-                       href="/ajuda" 
-                       onClick={(e) => { e.preventDefault(); navigateTo('help'); }}
-                       className="hover:underline"
-                     >
-                       Central de Ajuda
-                     </a>
-                   </li>
+                  <li>
+                    <a
+                      href="/termos-de-uso"
+                      onClick={(e) => { e.preventDefault(); navigateTo('terms'); }}
+                      className="hover:underline"
+                    >
+                      Termos de Uso
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/politica-de-privacidade"
+                      onClick={(e) => { e.preventDefault(); navigateTo('privacy'); }}
+                      className="hover:underline"
+                    >
+                      Privacidade
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/ajuda"
+                      onClick={(e) => { e.preventDefault(); navigateTo('help'); }}
+                      className="hover:underline"
+                    >
+                      Central de Ajuda
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
@@ -238,7 +300,7 @@ export default function App() {
             </div>
           </div>
           <div className="border-t border-gray-200 pt-8 text-center md:text-left text-[10px] md:text-xs">
-             © 2025 Vrumi Tecnologia Ltda. Todos os direitos reservados.
+            © 2025 Vrumi Tecnologia Ltda. Todos os direitos reservados.
           </div>
         </div>
       </footer>

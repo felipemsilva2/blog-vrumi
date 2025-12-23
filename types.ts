@@ -32,4 +32,4 @@ export interface NavItem {
   path: string;
 }
 
-export type ViewState = 'hub' | 'article' | 'contact' | 'terms' | 'help' | 'privacy';
+export type ViewState = 'hub' | 'article' | 'contact' | 'terms' | 'help' | 'privacy' | 'stripe-callback';
